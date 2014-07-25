@@ -1,4 +1,5 @@
    matlab-diamond-norm
+
    Copyright 2014 Raytheon BBN Technologies
 
    This product includes software developed at the
