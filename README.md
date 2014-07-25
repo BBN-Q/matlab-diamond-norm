@@ -1,6 +1,6 @@
 # matlab-diamond-norm
 
-This is a MATLAB&copy; function that computes the diamond norm distance between two completely positive trace-preserving (CPTP) superoperators. The calculation is based on a simplified semidefinite program specified in [arXiv:0901.4709](http://arxiv.org/abs/0901.4709) [J. Watrous, [Theory of Computing 5, 11, pp. 217-238 (2009)](http://theoryofcomputing.org/articles/v005a011/)]. More explicitly, it is specified in page 11 of the arXiv article, or page 231 of the published article.
+This is a MATLAB&reg; function that computes the diamond norm distance between two completely positive trace-preserving (CPTP) superoperators. The calculation is based on a simplified semidefinite program specified in [arXiv:0901.4709](http://arxiv.org/abs/0901.4709) [J. Watrous, [Theory of Computing 5, 11, pp. 217-238 (2009)](http://theoryofcomputing.org/articles/v005a011/)]. More explicitly, it is specified in page 11 of the arXiv article, or page 231 of the published article.
 
 **Note:** the function will not give the correct answer on arbitrary superoperators -- it is only valid on superoperators corresponding to the difference between two CPTP superoperators.
 
