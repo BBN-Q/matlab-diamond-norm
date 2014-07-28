@@ -31,11 +31,11 @@ cvx_begin sdp quiet
   variable W(dimsq,dimsq) hermitian;
   variable rho(dim,dim) hermitian;
 
-  maximize( trace(J'*W) );
+  maximize( trace(J'*W+J*W)/2 );
   subject to
     W >= 0;
     rho >= 0;
-    W <= kron(eye(dim),rho);
+    W - kron(eye(dim),rho) <= 0;
     trace(rho) == 1;
 
 cvx_end
