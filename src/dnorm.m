@@ -24,14 +24,15 @@ function result = dnorm( J )
   
 dimsq = size(J,1);
 dim = round(sqrt(dimsq));
+Jh = (J'+J)/2;
 
 cvx_begin sdp quiet
-  cvx_precision high
+  cvx_precision default % replace 'default' with 'high' for 1e-10 precision, but slower calculation
 
   variable W(dimsq,dimsq) hermitian;
   variable rho(dim,dim) hermitian;
 
-  maximize( trace(J'*W+J*W)/2 );
+  maximize( trace(Jh'*W) );
   subject to
     W >= 0;
     rho >= 0;

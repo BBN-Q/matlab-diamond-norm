@@ -20,6 +20,7 @@ function dnormtest()
 %
 
 import qip.*
+import qip.random.*
 import qip.open_systems.*
 
 id = choi_liou_involution(liou(pauli(0),pauli(0)));
@@ -37,6 +38,12 @@ cnot_u = [eye(2) zeros(2); zeros(2) pauli(1) ];
 cnot = choi_liou_involution(liou(cnot_u, cnot_u));
 id4  = choi_liou_involution(liou(eye(4), eye(4)));
 
+u2 = qip.random.unitary(2); uu2 = liou(u2,u2');
+u4 = qip.random.unitary(4); uu4 = liou(u4,u4');
+
+rr2 = @(c) choi_liou_involution(choi_liou_involution(c)*uu2);
+rr4 = @(c) choi_liou_involution(choi_liou_involution(c)*uu4);
+
 t = [ dnorm(id-id),
       dnorm(id-x),
       dnorm(id-y),
@@ -50,7 +57,27 @@ t = [ dnorm(id-id),
       dnorm(cnot-id4),
       dnorm(p1-p2) ];
 
-if norm(t - [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, sum(abs(r1-r2))/2]','inf') < 1e-11,
+ct =[ dnorm(rr2(id)-rr2(id)),
+      dnorm(rr2(id)-rr2(x)),
+      dnorm(rr2(id)-rr2(y)),
+      dnorm(rr2(id)-rr2(z)),
+      dnorm(rr2(x)-rr2(y)),
+      dnorm(rr2(x)-rr2(z)),
+      dnorm(rr2(y)-rr2(x)),
+      dnorm(rr2(y)-rr2(z)),
+      dnorm(rr2(z)-rr2(x)),
+      dnorm(rr2(z)-rr2(y)),
+      dnorm(rr4(cnot)-rr4(id4)),
+      dnorm(rr2(p1-p2)) ];
+
+%t
+%ct
+%[0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, sum(abs(r1-r2))/2]'
+
+%norm(t - [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, sum(abs(r1-r2))/2]','inf')
+%norm(ct - [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, sum(abs(r1-r2))/2]','inf')
+
+if (norm(t - [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, sum(abs(r1-r2))/2]','inf') < 1e-7) & (norm(ct - [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, sum(abs(r1-r2))/2]','inf') < 1e-7),
   disp('Test passed.');
 else
   disp('Test failed.');
