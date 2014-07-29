@@ -1,8 +1,9 @@
-function result = dnorm( J )
-%DNORM Diamond norm
+function result = errordnorm( J )
+%ERRORDNORM Diamond norm of error
 %
-%   dnorm(J) returns the diamond norm (completely-bounded induced 1-norm) of a
-%            Choi matrix J corresponding to the difference of two CP maps.
+%   errordnorm(J) returns the diamond form of the difference between a
+%            Choi matrix J and the Choi matrix corresponding to the identity channel
+%            of the appropriate dimension.
 %
 %   The normalization of J must be such that partial prace of the first
 %   half of J always yields the identity for trace preserving
@@ -23,26 +24,24 @@ function result = dnorm( J )
 %  limitations under the License.
 %
   
-dimsq = size(J,1);
-dim = round(sqrt(dimsq));
-Jh = (J'+J)/2;
+dim = round(sqrt(size(J,1)));
 
-cvx_begin sdp quiet
-  cvx_precision default % replace 'default' with 'high' for 1e-10 precision, but slower calculation
+persistent choi_id;
+persistent old_dim;
 
-  variable W(dimsq,dimsq) hermitian;
-  variable rho(dim,dim) hermitian;
+if size(choi_id) == [0 0] | dim ~= old_dim,
+  old_dim = dim;
+  max_ent = zeros(dim^2,1);
+  unit = zeros(dim,1); unit(1) = 1;
+  for ii=1:dim
+    max_ent = max_ent + kron(unit,unit);
+    unit = circshift(unit,1);
+  end
+  choi_id = max_ent*max_ent';
+end
 
-  maximize( trace(Jh'*W) );
-  subject to
-    W >= 0;
-    rho >= 0;
-    W - kron(eye(dim),rho) <= 0;
-    trace(rho) == 1;
+delta = J - choi_id;
 
-cvx_end
-
-result = cvx_optval;
-
+result = dnorm(delta);
 end
 
